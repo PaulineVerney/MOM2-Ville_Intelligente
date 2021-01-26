@@ -4,13 +4,22 @@ class Broadcast:
     def __init__(self, windows, pmax, sky_condition):
         self.efficiency = []
         self.ring = []
-        self.windows = windows
-        self.current_time = 0
         self.dict_of_suppliers = {}
         self.dict_of_consumers = {}
         self.token = 0
         self.Ya = 0
         self.Ys = 0
+
+class Time:
+    def __init__(self, windows):
+        self.windows = windows
+        self.current_window_index = 0
+        self.current_window = self.windows[self.current_window_index]
+        self.current_time = 0
+
+    def update_window(self):
+        self.current_window_index = self.current_window_index + 1
+        self.current_window = self.windows[self.current_window_index]
 
 class Neighborhood:
     def __init__(self, broadcast, size, remaining_energy_list, full_battery):
@@ -19,6 +28,10 @@ class Neighborhood:
         self.remaining_energy_list = remaining_energy_list
         self.full_battery = full_battery
         self.neighborhood = {}
+
+        self.create_neighborhood()
+        self.set_efficiency()
+        self.set_ring()
 
     def create_neighborhood(self):
         for i in range(self.size):
@@ -37,6 +50,15 @@ class Neighborhood:
             for j in range(self.size):
                 efficiency_i.append(1) # On fixe l'efficacité à 1 entre toutes les maisons pour l'instant
             self.broadcast.efficiency.append(efficiency_i)
+
+    def set_ring(self):
+        for i in range(self.size):
+            self.broadcast.ring.append(i)
+
+    def update_neighborhood(self):
+        print("Update")
+
+
 
 def _test_values():
     print("Test values")
