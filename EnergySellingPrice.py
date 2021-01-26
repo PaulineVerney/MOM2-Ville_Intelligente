@@ -8,4 +8,5 @@ class EnergySellingPrice:
         self.ratio_window = ratio_window
 
     def get_price_of_energy(self):
-        print("Returns float")
+        Y = self.Ya * (1 + 1/self.Yb) * (1 + 1/self.Ys)
+        return Y
