@@ -91,27 +91,39 @@ class Neighborhood:
             consumers_still_asking = 0
             suppliers_still_offering = 0
             for id in consumer_selection:
-                print("if energy requested not 0, increment count")
-                print("Request energy")
-            for id in supplier_selection:
-                print("if energy granted not 0, increment count")
-                print("Grant energy")
-                print("Add energy sharing instruction to list")
-                print("Update delta in broadcast")
-                print("Update broadcast in dictionaries")
+                if abs(consumer_selection[id].house.delta) > 0 :
+                    consumers_still_asking = consumers_still_asking + 1
+                    self.broadcast.dict_of_consumers[id].append(consumer_selection[id].request())
+                else:
+                    del self.broadcast.dict_of_consumers[id]
+
+            #Update Broadcast
             for id in consumer_selection:
-                print("Add energy sharing instruction to list")
-                print("Update delta in broadcast")
-                print("Update broadcast in dictionaries")
+                consumer_selection[id].update_broadcast(self.broadcast)
+            for id in supplier_selection:
+                supplier_selection[id].update_broadcast(self.broadcast)
+
+            for id in supplier_selection:
+                if abs(supplier_selection[id].house.delta) > 0 :
+                    suppliers_still_offering = suppliers_still_offering + 1
+                    self.broadcast.dict_of_suppliers[id].append(supplier_selection[id].response())
+                else:
+                    del self.broadcast.dict_of_suppliers[id]
+
+            # Update Broadcast
+            for id in consumer_selection:
+                consumer_selection[id].update_broadcast(self.broadcast)
+            for id in supplier_selection:
+                supplier_selection[id].update_broadcast(self.broadcast)
+
+            for id in consumer_selection:
+                for id2 in supplier_selection:
+                    if supplier_selection[id2].current_request_granted == consumer_selection[id].current_request:
+                        consumer_selection[id].add_instruction()
 
             if (consumers_still_asking==0) or (suppliers_still_offering==0):
                 exchange_in_progress = False
 
-
-
-
-def _test_values():
-    print("Test values")
 
 if __name__ == '__main__':
     print('Hello world!')
