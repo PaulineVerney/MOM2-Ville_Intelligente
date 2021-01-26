@@ -2,7 +2,7 @@ from House import House
 
 class Broadcast:
     def __init__(self, efficiency, ring, windows, current_time, dict_of_suppliers, dict_of_consumers, token,
-                 pmax, sky_condition, alpha, Ya, Ys):
+                 pmax, sky_condition, Ya, Ys):
         self.efficiency = efficiency
         self.ring = ring
         self.windows = windows
@@ -12,7 +12,7 @@ class Broadcast:
         self.token = token
         self.pmax = pmax
         self.sky_condition = sky_condition
-        self.alpha = alpha
+        self.alpha = 0.5 # Trouvé dans un article cité dans les sources de notre article
         self.Ya = Ya
         self.Ys = Ys
 
@@ -35,7 +35,7 @@ class Neighborhood:
                 # Give token to first house only
                 has_token = True
             # Add all the houses to the neighborhood
-            self.neighborhood[i] = House.House(house_id=i, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
+            self.neighborhood[i] = House(house_id=i, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
                                                full_battery=self.full_battery, pmax=self.broadcast.pmax,
                                                sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
                                                windows=self.broadcast.windows, current_time=self.broadcast.current_time,
