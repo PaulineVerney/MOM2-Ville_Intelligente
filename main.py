@@ -1,7 +1,7 @@
 from House import House
 
 class Broadcast:
-    def __init__(self, windows, pmax, sky_condition):
+    def __init__(self):
         self.efficiency = []
         self.ring = []
         self.dict_of_suppliers = {}
@@ -32,6 +32,8 @@ class Neighborhood:
         self.create_neighborhood()
         self.set_efficiency()
         self.set_ring()
+        self.set_Ya()
+        self.set_Ys()
 
     def create_neighborhood(self):
         for i in range(self.size):
@@ -55,10 +57,14 @@ class Neighborhood:
         for i in range(self.size):
             self.broadcast.ring.append(i)
 
+    def set_Ya(self):
+        self.broadcast.Ya = 10 # Nombre aléatoire pour l'instant
+
+    def set_Ys(self):
+        self.broadcast.Ys = 0.5 # Nombre aléatoire pour l'instant qu'il faudra calculer à partir du ratio d'acheteurs et de vendeurs
+
     def update_neighborhood(self):
         print("Update")
-
-
 
 def _test_values():
     print("Test values")
