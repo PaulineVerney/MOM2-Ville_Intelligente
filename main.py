@@ -58,7 +58,7 @@ class Neighborhood:
             self.broadcast.ring.append(i)
 
     def set_Ya(self):
-        self.broadcast.Ya = 10 # Nombre aléatoire pour l'instant
+        self.broadcast.Ya = 110 # Nombre aléatoire pour l'instant
 
     def set_Ys(self):
         self.broadcast.Ys = 0.5 # Nombre aléatoire pour l'instant qu'il faudra calculer à partir du ratio d'acheteurs et de vendeurs
