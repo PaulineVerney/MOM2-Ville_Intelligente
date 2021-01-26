@@ -1,4 +1,6 @@
 from House import House
+from SelectingEnergySharingForSupplier import SelectingEnergySharingForSupplier
+from SelectingEnergySharingForConsumer import SelectingEnergySharingForConsumer
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,8 +14,6 @@ class Broadcast:
         self.dict_of_suppliers = {}
         self.dict_of_consumers = {}
         self.token = 0
-        self.Ya = 0
-        self.Ys = 0
 
 class Time:
     def __init__(self, windows):
@@ -35,7 +35,6 @@ class Neighborhood:
         self.full_battery = full_battery
         self.neighborhood = {}
 
-        self.set_Ya()
         self.create_neighborhood()
         self.set_efficiency()
         self.set_ring()
@@ -49,8 +48,7 @@ class Neighborhood:
             # Add all the houses to the neighborhood
             self.neighborhood[id] = House(house_id=id, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
                                          full_battery=self.full_battery, windows=self.time.windows,
-                                         current_time=self.time.current_time,
-                                         Ya=self.broadcast.Ya, Ys=self.broadcast.Ys)
+                                         current_time=self.time.current_time)
     def set_efficiency(self):
         for i in range(self.size):
             efficiency_i = []
@@ -62,10 +60,8 @@ class Neighborhood:
         for id in range(self.size):
             self.broadcast.ring.append(id)
 
-    def set_Ya(self):
-        self.broadcast.Ya = 110 # Nombre aléatoire pour l'instant
-
     def update_neighborhood(self):
+
         # Broadcasting Energy Difference
         self.broadcast.dict_of_suppliers = {}
         self.broadcast.dict_of_consumers = {}
@@ -74,13 +70,29 @@ class Neighborhood:
                 self.broadcast.dict_of_suppliers[id] = self.neighborhood[id].delta
             if self.neighborhood[id].delta < 0:
                 self.broadcast.dict_of_consumers[id] = self.neighborhood[id].delta
+
         # Multicasting Energy Price
         Ys = len(self.broadcast.dict_of_suppliers)/len(self.broadcast.dict_of_consumers)
         for id in self.broadcast.dict_of_suppliers:
             self.neighborhood[id].Ys = Ys
             self.neighborhood[id].set_Yb()
+            self.neighborhood[id].Ya = 110
             self.neighborhood[id].set_price_of_energy()
-            
+            self.broadcast.dict_of_suppliers[id].append(self.neighborhood[id].price)
+
+        # Selecting Energy Suppliers
+        exchange_in_progress = True
+        consumer_selection = {}
+        supplier_selection = {}
+        for id in self.broadcast.dict_of_consumers:
+            consumer_selection[id] = SelectingEnergySharingForConsumer(self.neighborhood[id],self.broadcast)
+
+        consumer_selection = SelectingEnergySharingForConsumer()
+        supplier_selection = SelectingEnergySharingForSupplier()
+        #while exchange_in_progress:
+
+
+
 
 
 def _test_values():
