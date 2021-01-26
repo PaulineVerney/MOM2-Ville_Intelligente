@@ -104,6 +104,8 @@ class Neighborhood:
                 print("Update delta in broadcast")
                 print("Update broadcast in dictionaries")
 
+            if (consumers_still_asking==0) or (suppliers_still_offering==0):
+                exchange_in_progress = False
 
 
 
