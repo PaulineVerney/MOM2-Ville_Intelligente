@@ -1,10 +1,8 @@
 from House import House
 
-
 class Broadcast:
-    def __init__(self, efficiency, ring, windows,
-                 current_time, dict_of_suppliers,
-                 dict_of_consumers, token):
+    def __init__(self, efficiency, ring, windows, current_time, dict_of_suppliers, dict_of_consumers, token,
+                 pmax, sky_condition, alpha, Ya, Ys):
         self.efficiency = efficiency
         self.ring = ring
         self.windows = windows
@@ -12,7 +10,41 @@ class Broadcast:
         self.dict_of_suppliers = dict_of_suppliers
         self.dict_of_consumers = dict_of_consumers
         self.token = token
+        self.pmax = pmax
+        self.sky_condition = sky_condition
+        self.alpha = alpha
+        self.Ya = Ya
+        self.Ys = Ys
 
+class Neighborhood:
+    def __init__(self, broadcast, size, remaining_energy_list, full_battery, predicted_previous_consumption_list, actual_previous_consumption_list):
+        self.broadcast = broadcast
+        self.size = size
+        self.remaining_energy_list = remaining_energy_list
+        self.full_battery = full_battery
+        self.predicted_previous_consumption_list = predicted_previous_consumption_list
+        self.actual_previous_consumption_list = actual_previous_consumption_list
+        self.neighborhood = {}
+
+    def create_neighborhood(self):
+        for i in range(self.size):
+            if i==0:
+                # Give token to first house
+                self.neighborhood[i] = House.House(house_id=i, has_token=True, remaining_battery=self.remaining_energy_list[i],
+                                                   full_battery=self.full_battery, pmax=self.broadcast.pmax,
+                                                   sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
+                                                   windows=self.broadcast.windows, current_time=self.broadcast.current_time,
+                                                   predicted_previous_consumption=self.predicted_previous_consumption_list[i],
+                                                   actual_previous_consumption=self.actual_previous_consumption_list[i],
+                                                   Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+            else:
+                self.neighborhood[i] = House.House(house_id=i, has_token=False, remaining_battery=self.remaining_energy_list[i],
+                                                   full_battery=self.full_battery, pmax=self.broadcast.pmax,
+                                                   sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
+                                                   windows=self.broadcast.windows, current_time=self.broadcast.current_time,
+                                                   predicted_previous_consumption=self.predicted_previous_consumption_list[i],
+                                                   actual_previous_consumption=self.actual_previous_consumption_list[i],
+                                                   Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
 
 if __name__ == '__main__':
     print('Hello world!')
