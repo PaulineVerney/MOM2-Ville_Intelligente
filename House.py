@@ -2,15 +2,16 @@ from SelectingEnergySharingForConsumer import SelectingEnergySharingForConsumer
 from SelectingEnergySharingForSupplier import SelectingEnergySharingForSupplier
 
 class House:
-    def __init__(self, house_id, has_token, remaining_battery, full_battery, windows, current_time):
+    def __init__(self, house_id, has_token, remaining_battery, full_battery):
+        #, windows, current_time
         self.house_id = house_id
         self.delta = 0
         self.price = 0
         self.has_token = has_token
         self.remaining_battery = remaining_battery
         self.full_battery = full_battery
-        self.windows = windows
-        self.current_time = current_time
+        #self.windows = windows
+        #self.current_time = current_time
         self.Ya = 110
         self.Yb = 1.0
         self.Ys = 1

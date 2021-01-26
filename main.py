@@ -46,9 +46,8 @@ class Neighborhood:
                 # Give token to first house only
                 has_token = True
             # Add all the houses to the neighborhood
-            self.neighborhood[id] = House(house_id=id, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
-                                         full_battery=self.full_battery, windows=self.time.windows,
-                                         current_time=self.time.current_time)
+            self.neighborhood[id] = House(house_id=id, has_token=has_token, remaining_battery=self.remaining_energy_list[id],
+                                         full_battery=self.full_battery)
     def set_efficiency(self):
         for i in range(self.size):
             efficiency_i = []
@@ -106,7 +105,7 @@ if __name__ == '__main__':
     Ya = 110.0 #$/kWh
     x = np.arange(0, maxWindows, 1)
     delta = np.zeros(maxWindows )
-    house1 = House(1, True, remaining_battery=0.1, full_battery=100.0, windows=0, current_time=0, Ya=Ya, Ys=3.0)
+    #house1 = House(1, True, remaining_battery=0.1, full_battery=100.0, windows=0, current_time=0, Ya=Ya, Ys=3.0)
     #house2 = House(2, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
     #house3 = House(3, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
     #house4 = House(4, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
@@ -143,12 +142,12 @@ if __name__ == '__main__':
     numberHouses = 6
     remaining_energy_list = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
     full_battery = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
-    newNeighborhood = Neighborhood (numberHouses, remaining_energy_list, full_battery, windows = 7091)
+    newNeighborhood = Neighborhood (numberHouses, remaining_energy_list, full_battery)
     newNeighborhood.create_neighborhood()
-
+    i = 0
     for i in range(maxWindows) :
         newNeighborhood.neighborhood[0].delta = house1Delta.iloc[i]
-        delta[i] = house1.delta
+        delta[i] = newNeighborhood.neighborhood[0].delta
 
     plt.plot(x, delta)
     plt.show()
