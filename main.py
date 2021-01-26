@@ -27,8 +27,8 @@ class Time:
         self.current_window = self.windows[self.current_window_index]
 
 class Neighborhood:
-    def __init__(self, broadcast, size, remaining_energy_list, full_battery):
-        self.broadcast = broadcast
+    def __init__(self, size, remaining_energy_list, full_battery):
+        self.broadcast = Broadcast()
         self.size = size
         self.remaining_energy_list = remaining_energy_list
         self.full_battery = full_battery
