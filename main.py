@@ -26,25 +26,25 @@ class Neighborhood:
         self.actual_previous_consumption_list = actual_previous_consumption_list
         self.neighborhood = {}
 
+        self.create_neighborhood()
+
     def create_neighborhood(self):
         for i in range(self.size):
+            has_token = False
             if i==0:
-                # Give token to first house
-                self.neighborhood[i] = House.House(house_id=i, has_token=True, remaining_battery=self.remaining_energy_list[i],
-                                                   full_battery=self.full_battery, pmax=self.broadcast.pmax,
-                                                   sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
-                                                   windows=self.broadcast.windows, current_time=self.broadcast.current_time,
-                                                   predicted_previous_consumption=self.predicted_previous_consumption_list[i],
-                                                   actual_previous_consumption=self.actual_previous_consumption_list[i],
-                                                   Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
-            else:
-                self.neighborhood[i] = House.House(house_id=i, has_token=False, remaining_battery=self.remaining_energy_list[i],
-                                                   full_battery=self.full_battery, pmax=self.broadcast.pmax,
-                                                   sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
-                                                   windows=self.broadcast.windows, current_time=self.broadcast.current_time,
-                                                   predicted_previous_consumption=self.predicted_previous_consumption_list[i],
-                                                   actual_previous_consumption=self.actual_previous_consumption_list[i],
-                                                   Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+                # Give token to first house only
+                has_token = True
+            # Add all the houses to the neighborhood
+            self.neighborhood[i] = House.House(house_id=i, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
+                                               full_battery=self.full_battery, pmax=self.broadcast.pmax,
+                                               sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
+                                               windows=self.broadcast.windows, current_time=self.broadcast.current_time,
+                                               predicted_previous_consumption=self.predicted_previous_consumption_list[i],
+                                               actual_previous_consumption=self.actual_previous_consumption_list[i],
+                                               Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+
+def _test_values():
+    print("Test values")
 
 if __name__ == '__main__':
     print('Hello world!')
