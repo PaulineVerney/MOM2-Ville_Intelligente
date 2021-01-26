@@ -1,4 +1,6 @@
 from House import House
+from SelectingEnergySharingForSupplier import SelectingEnergySharingForSupplier
+from SelectingEnergySharingForConsumer import SelectingEnergySharingForConsumer
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -80,7 +82,15 @@ class Neighborhood:
 
         # Selecting Energy Suppliers
         exchange_in_progress = True
+        consumer_selection = {}
+        supplier_selection = {}
+        for id in self.broadcast.dict_of_consumers:
+            consumer_selection[id] = SelectingEnergySharingForConsumer(self.neighborhood[id],self.broadcast)
+
+        consumer_selection = SelectingEnergySharingForConsumer()
+        supplier_selection = SelectingEnergySharingForSupplier()
         #while exchange_in_progress:
+
 
 
 
