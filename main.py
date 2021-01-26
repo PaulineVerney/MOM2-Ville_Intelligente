@@ -1,32 +1,24 @@
 from House import House
 
 class Broadcast:
-    def __init__(self, efficiency, ring, windows, current_time, dict_of_suppliers, dict_of_consumers, token,
-                 pmax, sky_condition, Ya, Ys):
-        self.efficiency = efficiency
-        self.ring = ring
+    def __init__(self, windows, pmax, sky_condition):
+        self.efficiency = []
+        self.ring = []
         self.windows = windows
-        self.current_time = current_time
-        self.dict_of_suppliers = dict_of_suppliers
-        self.dict_of_consumers = dict_of_consumers
-        self.token = token
-        self.pmax = pmax
-        self.sky_condition = sky_condition
-        self.alpha = 0.5 # Trouvé dans un article cité dans les sources de notre article
-        self.Ya = Ya
-        self.Ys = Ys
+        self.current_time = 0
+        self.dict_of_suppliers = {}
+        self.dict_of_consumers = {}
+        self.token = 0
+        self.Ya = 0
+        self.Ys = 0
 
 class Neighborhood:
-    def __init__(self, broadcast, size, remaining_energy_list, full_battery, predicted_previous_consumption_list, actual_previous_consumption_list):
+    def __init__(self, broadcast, size, remaining_energy_list, full_battery):
         self.broadcast = broadcast
         self.size = size
         self.remaining_energy_list = remaining_energy_list
         self.full_battery = full_battery
-        self.predicted_previous_consumption_list = predicted_previous_consumption_list
-        self.actual_previous_consumption_list = actual_previous_consumption_list
         self.neighborhood = {}
-
-        self.create_neighborhood()
 
     def create_neighborhood(self):
         for i in range(self.size):
@@ -36,12 +28,15 @@ class Neighborhood:
                 has_token = True
             # Add all the houses to the neighborhood
             self.neighborhood[i] = House(house_id=i, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
-                                               full_battery=self.full_battery, pmax=self.broadcast.pmax,
-                                               sky_condition=self.broadcast.sky_condition, alpha=self.broadcast.alpha,
-                                               windows=self.broadcast.windows, current_time=self.broadcast.current_time,
-                                               predicted_previous_consumption=self.predicted_previous_consumption_list[i],
-                                               actual_previous_consumption=self.actual_previous_consumption_list[i],
-                                               Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+                                         full_battery=self.full_battery, windows=self.broadcast.windows,
+                                         current_time=self.broadcast.current_time,
+                                         Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+    def set_efficiency(self):
+        for i in range(self.size):
+            efficiency_i = []
+            for j in range(self.size):
+                efficiency_i.append(1) # On fixe l'efficacité à 1 entre toutes les maisons pour l'instant
+            self.broadcast.efficiency.append(efficiency_i)
 
 def _test_values():
     print("Test values")
