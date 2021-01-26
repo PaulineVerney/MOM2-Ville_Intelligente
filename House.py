@@ -15,8 +15,8 @@ class House:
         self.Yb = 0
         self.Ys = Ys
 
-        self.set_Yb()
-        self.set_price_of_energy()
+        #self.set_Yb()
+        #self.set_price_of_energy()
         self.set_delta()
 
     def set_Yb(self):
