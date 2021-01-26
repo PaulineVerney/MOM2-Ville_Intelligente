@@ -1,4 +1,9 @@
 from House import House
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+import datetime
 
 class Broadcast:
     def __init__(self):
@@ -82,3 +87,31 @@ def _test_values():
 
 if __name__ == '__main__':
     print('Hello world!')
+    maxWindows = 9071
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
+    Ya = 110.0 #$/kWh
+    x = np.arange(0, maxWindows, 1)
+    delta = np.zeros(maxWindows )
+    house1 = House(1, True, remaining_battery=0.1, full_battery=100.0, windows=0, current_time=0, Ya=Ya, Ys=3.0)
+    #house2 = House(2, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+    #house3 = House(3, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+    #house4 = House(4, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+    #house5 = House(5, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+    #house6 = House(6, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+
+    consumption = pd.read_csv("consumption.csv",header=0)
+    production = pd.read_csv("production.csv", header=0)
+
+    house1Consumption = consumption["residential1_consumption"].iloc[1:]
+    house1Production = production["DE_KN_residential1_pv"].iloc[1:]
+    house1Delta =  house1Consumption - house1Production
+    for i in range(maxWindows) :
+        house1.delta = house1Delta.iloc[i]
+        delta[i] = house1.delta
+
+    plt.plot(x,delta)
+    plt.show()
+
+
+    #for i in range()
