@@ -104,13 +104,7 @@ if __name__ == '__main__':
     pd.set_option('display.max_rows', None)
     Ya = 110.0 #$/kWh
     x = np.arange(0, maxWindows, 1)
-    delta = np.zeros(maxWindows )
-    #house1 = House(1, True, remaining_battery=0.1, full_battery=100.0, windows=0, current_time=0, Ya=Ya, Ys=3.0)
-    #house2 = House(2, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
-    #house3 = House(3, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
-    #house4 = House(4, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
-    #house5 = House(5, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
-    #house6 = House(6, False, remaining_battery=0, full_battery=100, windows=0, current_time=0, Ya=Ya, Ys=3)
+    delta = np.zeros(maxWindows)
 
     consumption = pd.read_csv("consumption.csv",header=0)
     production = pd.read_csv("production.csv", header=0)
@@ -135,19 +129,20 @@ if __name__ == '__main__':
     house6Production = production["DE_KN_residential6_pv"].iloc[1:]
     house6Delta = house6Consumption - house6Production
 
-
-
-
-
     numberHouses = 6
     remaining_energy_list = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
     full_battery = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
     newNeighborhood = Neighborhood (numberHouses, remaining_energy_list, full_battery)
     newNeighborhood.create_neighborhood()
     i = 0
-    for i in range(maxWindows) :
+    for i in range(maxWindows):
         newNeighborhood.neighborhood[0].delta = house1Delta.iloc[i]
-        delta[i] = newNeighborhood.neighborhood[0].delta
+        newNeighborhood.neighborhood[1].delta = house2Delta.iloc[i]
+        newNeighborhood.neighborhood[2].delta = house3Delta.iloc[i]
+        newNeighborhood.neighborhood[3].delta = house4Delta.iloc[i]
+        newNeighborhood.neighborhood[4].delta = house5Delta.iloc[i]
+        newNeighborhood.neighborhood[5].delta = house6Delta.iloc[i]
+        delta[i] = newNeighborhood.neighborhood[5].delta
 
     plt.plot(x, delta)
     plt.show()
