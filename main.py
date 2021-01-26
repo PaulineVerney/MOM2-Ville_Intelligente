@@ -15,17 +15,6 @@ class Broadcast:
         self.dict_of_consumers = {}
         self.token = 0
 
-class Time:
-    def __init__(self, windows):
-        self.windows = windows
-        self.current_window_index = 0
-        self.current_window = self.windows[self.current_window_index]
-        self.current_time = 0
-
-    def update_window(self):
-        self.current_window_index = self.current_window_index + 1
-        self.current_window = self.windows[self.current_window_index]
-
 class Neighborhood:
     def __init__(self, size, remaining_energy_list, full_battery):
         self.broadcast = Broadcast()
