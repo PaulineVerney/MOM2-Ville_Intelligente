@@ -86,10 +86,24 @@ class Neighborhood:
         supplier_selection = {}
         for id in self.broadcast.dict_of_consumers:
             consumer_selection[id] = SelectingEnergySharingForConsumer(self.neighborhood[id],self.broadcast)
-
-        consumer_selection = SelectingEnergySharingForConsumer()
-        supplier_selection = SelectingEnergySharingForSupplier()
-        #while exchange_in_progress:
+        for id in self.broadcast.dict_of_suppliers:
+            supplier_selection[id] = SelectingEnergySharingForSupplier(self.neighborhood[id],self.broadcast)
+        while exchange_in_progress:
+            consumers_still_asking = 0
+            suppliers_still_offering = 0
+            for id in consumer_selection:
+                print("if energy requested not 0, increment count")
+                print("Request energy")
+            for id in supplier_selection:
+                print("if energy granted not 0, increment count")
+                print("Grant energy")
+                print("Add energy sharing instruction to list")
+                print("Update delta in broadcast")
+                print("Update broadcast in dictionaries")
+            for id in consumer_selection:
+                print("Add energy sharing instruction to list")
+                print("Update delta in broadcast")
+                print("Update broadcast in dictionaries")
 
 
 
