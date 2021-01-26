@@ -12,10 +12,16 @@ class SelectingEnergySharingForConsumer:
     def request(self):
         print("Dealing request")
         # Sorting suppliers by price
+        cheapest_price = 10000000
+        for id in self.dict_of_suppliers:
+            new
+            if self.dict_of_suppliers[id] < cheapest_price:
+                cheapest_id = id
         suppliers_sorted_by_price = []
         ids_and_prices = []
         for id in self.dict_of_suppliers:
-            ids_and_prices.append([id,self.dict_of_suppliers[id][1]])
+            #ids_and_prices.append([id,self.dict_of_suppliers[id][1]])
+            ids_and_prices.append([id, self.dict_of_suppliers[id][1]])
         for iter_num in range(len(ids_and_prices)-1,0,-1):
             for idx in range(iter_num):
                 if ids_and_prices[idx][1] > ids_and_prices[idx+1][1]:
@@ -27,8 +33,9 @@ class SelectingEnergySharingForConsumer:
 
         # Going throught suppliers sorted by price
         cheapest_id = suppliers_sorted_by_price[0]
-        Ei = abs(self.dict_of_suppliers[cheapest_id][0])
-        Ej_eff = abs(self.house.delta / self.efficiency[cheapest_id][self.house.cheapest_id])
+        #Ei = abs(self.dict_of_suppliers[cheapest_id][0])
+        Ei = abs(self.dict_of_suppliers[cheapest_id])
+        Ej_eff = abs(self.house.delta / self.efficiency[cheapest_id][self.house.house_id])
         if Ei >= Ej_eff:
             self.current_request = [cheapest_id, Ej_eff]
         else:

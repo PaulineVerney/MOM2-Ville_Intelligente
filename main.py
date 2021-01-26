@@ -59,64 +59,74 @@ class Neighborhood:
             if self.neighborhood[id].delta < 0:
                 self.broadcast.dict_of_consumers[id] = self.neighborhood[id].delta
 
+        for item in self.broadcast.dict_of_suppliers:
+            print("Key : {} , Value : {}".format(item, self.broadcast.dict_of_suppliers[item]))
+        for item in self.broadcast.dict_of_consumers:
+            print("Key : {} , Value : {}".format(item, self.broadcast.dict_of_consumers[item]))
+
         # Multicasting Energy Price
-        Ys = len(self.broadcast.dict_of_suppliers)/len(self.broadcast.dict_of_consumers)
-        for id in self.broadcast.dict_of_suppliers:
-            self.neighborhood[id].Ys = Ys
-            self.neighborhood[id].set_Yb()
-            self.neighborhood[id].Ya = 110
-            self.neighborhood[id].set_price_of_energy()
-            self.broadcast.dict_of_suppliers[id].append(self.neighborhood[id].price)
+        count = len(self.broadcast.dict_of_consumers)
+        if count!=0:
+            Ys = len(self.broadcast.dict_of_suppliers)/len(self.broadcast.dict_of_consumers)
+            for id in self.broadcast.dict_of_suppliers:
+                self.neighborhood[id].Ys = Ys
+                self.neighborhood[id].set_Yb()
+                self.neighborhood[id].Ya = 110
+                self.neighborhood[id].set_price_of_energy()
+                self.broadcast.dict_of_suppliers[id] = (self.neighborhood[id].price)
+                print(self.neighborhood[id].price)
+            # Selecting Energy Suppliers
+            exchange_in_progress = True
+            consumer_selection = {}
+            supplier_selection = {}
+            for id in self.broadcast.dict_of_consumers:
+                consumer_selection[id] = SelectingEnergySharingForConsumer(self.neighborhood[id],self.broadcast)
+            for id in self.broadcast.dict_of_suppliers:
+                supplier_selection[id] = SelectingEnergySharingForSupplier(self.neighborhood[id],self.broadcast)
+            while exchange_in_progress:
+                consumers_still_asking = 0
+                suppliers_still_offering = 0
+                for id in consumer_selection:
+                    if abs(consumer_selection[id].house.delta) > 0 :
+                        consumers_still_asking = consumers_still_asking + 1
+                        #self.broadcast.dict_of_consumers[id] = (consumer_selection[id].request())
+                        self.broadcast.dict_of_consumers[id] = (consumer_selection[id].request())
+                    else:
+                        del self.broadcast.dict_of_consumers[id]
 
-        # Selecting Energy Suppliers
-        exchange_in_progress = True
-        consumer_selection = {}
-        supplier_selection = {}
-        for id in self.broadcast.dict_of_consumers:
-            consumer_selection[id] = SelectingEnergySharingForConsumer(self.neighborhood[id],self.broadcast)
-        for id in self.broadcast.dict_of_suppliers:
-            supplier_selection[id] = SelectingEnergySharingForSupplier(self.neighborhood[id],self.broadcast)
-        while exchange_in_progress:
-            consumers_still_asking = 0
-            suppliers_still_offering = 0
-            for id in consumer_selection:
-                if abs(consumer_selection[id].house.delta) > 0 :
-                    consumers_still_asking = consumers_still_asking + 1
-                    self.broadcast.dict_of_consumers[id].append(consumer_selection[id].request())
-                else:
-                    del self.broadcast.dict_of_consumers[id]
+                #Update Broadcast
+                for id in consumer_selection:
+                    consumer_selection[id].update_broadcast(self.broadcast)
+                for id in supplier_selection:
+                    supplier_selection[id].update_broadcast(self.broadcast)
 
-            #Update Broadcast
-            for id in consumer_selection:
-                consumer_selection[id].update_broadcast(self.broadcast)
-            for id in supplier_selection:
-                supplier_selection[id].update_broadcast(self.broadcast)
+                for id in supplier_selection:
+                    if abs(supplier_selection[id].house.delta) > 0 :
+                        suppliers_still_offering = suppliers_still_offering + 1
+                        #self.broadcast.dict_of_suppliers[id].append(supplier_selection[id].response())
+                        self.broadcast.dict_of_suppliers[id] = supplier_selection[id].response()
+                    else:
+                        del self.broadcast.dict_of_suppliers[id]
 
-            for id in supplier_selection:
-                if abs(supplier_selection[id].house.delta) > 0 :
-                    suppliers_still_offering = suppliers_still_offering + 1
-                    self.broadcast.dict_of_suppliers[id].append(supplier_selection[id].response())
-                else:
-                    del self.broadcast.dict_of_suppliers[id]
+                # Update Broadcast
+                for id in consumer_selection:
+                    consumer_selection[id].update_broadcast(self.broadcast)
+                for id in supplier_selection:
+                    supplier_selection[id].update_broadcast(self.broadcast)
 
-            # Update Broadcast
-            for id in consumer_selection:
-                consumer_selection[id].update_broadcast(self.broadcast)
-            for id in supplier_selection:
-                supplier_selection[id].update_broadcast(self.broadcast)
+                for id in consumer_selection:
+                    for id2 in supplier_selection:
+                        if supplier_selection[id2].current_request_granted == consumer_selection[id].current_request:
+                            consumer_selection[id].add_instruction()
 
-            for id in consumer_selection:
-                for id2 in supplier_selection:
-                    if supplier_selection[id2].current_request_granted == consumer_selection[id].current_request:
-                        consumer_selection[id].add_instruction()
-
-            if (consumers_still_asking==0) or (suppliers_still_offering==0):
-                exchange_in_progress = False
+                if (consumers_still_asking==0) or (suppliers_still_offering==0):
+                    exchange_in_progress = False
 
 
 if __name__ == '__main__':
     print('Hello world!')
-    maxWindows = 9071
+    #maxWindows = 9071
+    maxWindows = 30
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
     Ya = 110.0 #$/kWh
@@ -125,6 +135,9 @@ if __name__ == '__main__':
 
     consumption = pd.read_csv("consumption.csv",header=0)
     production = pd.read_csv("production.csv", header=0)
+
+    print(consumption.head(30))
+    print(production.head(30))
 
     house1Consumption = consumption["residential1_consumption"].iloc[1:]
     house1Production = production["DE_KN_residential1_pv"].iloc[1:]
@@ -148,7 +161,7 @@ if __name__ == '__main__':
 
     numberHouses = 6
     remaining_energy_list = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-    full_battery = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+    full_battery = 100.0
     newNeighborhood = Neighborhood (numberHouses, remaining_energy_list, full_battery)
     newNeighborhood.create_neighborhood()
     i = 0
@@ -159,7 +172,8 @@ if __name__ == '__main__':
         newNeighborhood.neighborhood[3].delta = house4Delta.iloc[i]
         newNeighborhood.neighborhood[4].delta = house5Delta.iloc[i]
         newNeighborhood.neighborhood[5].delta = house6Delta.iloc[i]
-        delta[i] = newNeighborhood.neighborhood[5].delta
+        newNeighborhood.update_neighborhood()
+        #delta[i] = newNeighborhood.neighborhood[5].delta
 
-    plt.plot(x, delta)
-    plt.show()
+    #plt.plot(x, delta)
+    #plt.show()
