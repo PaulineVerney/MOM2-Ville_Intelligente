@@ -27,9 +27,9 @@ class Time:
         self.current_window = self.windows[self.current_window_index]
 
 class Neighborhood:
-    def __init__(self, size, remaining_energy_list, full_battery, windows):
+    def __init__(self, size, remaining_energy_list, full_battery):
         self.broadcast = Broadcast()
-        self.time = Time(windows)
+        #self.time = Time(windows)
         self.size = size
         self.remaining_energy_list = remaining_energy_list
         self.full_battery = full_battery
@@ -107,12 +107,36 @@ if __name__ == '__main__':
     house1Consumption = consumption["residential1_consumption"].iloc[1:]
     house1Production = production["DE_KN_residential1_pv"].iloc[1:]
     house1Delta =  house1Consumption - house1Production
+
+    house2Delta = consumption["residential2_consumption"].iloc[1:]
+
+    house3Consumption = consumption["residential3_consumption"].iloc[1:]
+    house3Production = production["DE_KN_residential3_pv"].iloc[1:]
+    house3Delta = house3Consumption - house3Production
+
+    house4Consumption = consumption["residential4_consumption"].iloc[1:]
+    house4Production = production["DE_KN_residential4_pv"].iloc[1:]
+    house4Delta = house4Consumption - house4Production
+
+    house5Delta = consumption["residential5_consumption"].iloc[1:]
+
+    house6Consumption = consumption["residential6_consumption"].iloc[1:]
+    house6Production = production["DE_KN_residential6_pv"].iloc[1:]
+    house6Delta = house6Consumption - house6Production
+
+
+
+
+
+    numberHouses = 6
+    remaining_energy_list = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+    full_battery = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+    newNeighborhood = Neighborhood (numberHouses, remaining_energy_list, full_battery, windows = 7091)
+    newNeighborhood.create_neighborhood()
+
     for i in range(maxWindows) :
-        house1.delta = house1Delta.iloc[i]
+        newNeighborhood.neighborhood[0].delta = house1Delta.iloc[i]
         delta[i] = house1.delta
 
-    plt.plot(x,delta)
+    plt.plot(x, delta)
     plt.show()
-
-
-    #for i in range()
