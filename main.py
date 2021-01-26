@@ -30,7 +30,6 @@ class Neighborhood:
         self.neighborhood = {}
 
         self.set_Ya()
-        self.set_Ys()
         self.create_neighborhood()
         self.set_efficiency()
         self.set_ring()
@@ -73,8 +72,9 @@ class Neighborhood:
         Ys = len(self.broadcast.dict_of_suppliers)/len(self.broadcast.dict_of_consumers)
         for id in self.broadcast.dict_of_suppliers:
             self.neighborhood[id].Ys = Ys
+            self.neighborhood[id].set_Yb()
             self.neighborhood[id].set_price_of_energy()
-
+            
 
 
 def _test_values():
