@@ -27,8 +27,9 @@ class Time:
         self.current_window = self.windows[self.current_window_index]
 
 class Neighborhood:
-    def __init__(self, size, remaining_energy_list, full_battery):
+    def __init__(self, size, remaining_energy_list, full_battery, windows):
         self.broadcast = Broadcast()
+        self.time = Time(windows)
         self.size = size
         self.remaining_energy_list = remaining_energy_list
         self.full_battery = full_battery
@@ -47,9 +48,9 @@ class Neighborhood:
                 has_token = True
             # Add all the houses to the neighborhood
             self.neighborhood[id] = House(house_id=id, has_token=has_token, remaining_battery=self.remaining_energy_list[i],
-                                         full_battery=self.full_battery, windows=self.broadcast.windows,
-                                         current_time=self.broadcast.current_time,
-                                         Ya=self.broadcast.Ya, Ys=self.broadcast.Yb)
+                                         full_battery=self.full_battery, windows=self.time.windows,
+                                         current_time=self.time.current_time,
+                                         Ya=self.broadcast.Ya, Ys=self.broadcast.Ys)
     def set_efficiency(self):
         for i in range(self.size):
             efficiency_i = []
