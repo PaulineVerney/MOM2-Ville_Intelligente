@@ -12,7 +12,7 @@ class House:
         self.windows = windows
         self.current_time = current_time
         self.Ya = Ya
-        self.Yb = 0
+        self.Yb = 1.0
         self.Ys = Ys
 
         self.set_Yb()
@@ -27,7 +27,7 @@ class House:
         self.delta = 0 # CHANGER : On doit récupérer la différence entre la consommation et l'énergie produite dans les données
 
     def set_price_of_energy(self):
-        Y = self.Ya * (1 + 1/self.Yb) * (1 + 1/self.Ys)
+        Y = self.Ya * (1.0 + 1.0/self.Yb) * (1.0 + 1.0/self.Ys)
         self.price = Y
 
 
