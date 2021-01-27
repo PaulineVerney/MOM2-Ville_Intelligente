@@ -13,18 +13,17 @@ class SelectingEnergySharingForSupplier:
         most_efficient_id = 'None'
         best_efficiency = 0
         for id in self.dict_of_consumers:
-            #print(self.dict_of_consumers[id])
-            if self.dict_of_consumers[id][0] == self.house.house_id:
-                efficiency_of_consumer = self.efficiency[self.house.house_id][id]
-                if efficiency_of_consumer > best_efficiency:
-                    best_efficiency = efficiency_of_consumer
-                    most_efficient_id = id
+            if self.dict_of_consumers[id] != None:
+                if self.dict_of_consumers[id][0] == self.house.house_id:
+                    efficiency_of_consumer = self.efficiency[self.house.house_id][id]
+                    if efficiency_of_consumer > best_efficiency:
+                        best_efficiency = efficiency_of_consumer
+                        most_efficient_id = id
         if most_efficient_id == 'None':
             return None
 
         else:
             Ei = abs(self.house.delta)
-            print()
             Er = abs(self.broadcast.dict_of_consumers[most_efficient_id][1])
 
             if Ei >= Er:
@@ -34,6 +33,7 @@ class SelectingEnergySharingForSupplier:
             self.energy_sharing_instructions.append([most_efficient_id,energy_granted])
             self.house.delta = Ei - energy_granted
             self.current_request_granted = [most_efficient_id, energy_granted]
+            print("La maison",self.house.house_id,"donne",self.current_request_granted[1],"à la maison",self.current_request_granted[0])
             return self.current_request_granted
 
     def update_broadcast(self, broadcast):

@@ -24,7 +24,7 @@ class House:
         self.Yb = self.remaining_battery / self.full_battery
 
     def set_delta(self):
-        print("Set delta")
+        #print("Set delta")
         self.delta = 0 # CHANGER : On doit récupérer la différence entre la consommation et l'énergie produite dans les données
 
     def set_price_of_energy(self):
